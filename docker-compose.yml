@@ -9,8 +9,8 @@ services:
     volumes:
       - .:/var/www/html
     environment:
-      - MYSQL_HOST=172.21.0.2  # Update to the new IP from inspect
-      - MYSQL_PORT=3307       # Match the host port mapping
+      - MYSQL_HOST=mysql  # Use service name after network connection
+      - MYSQL_PORT=3306   # Internal MySQL port
       - MYSQL_USER=root
       - MYSQL_PASSWORD=rootpassword
       - MYSQL_DATABASE=cms_db
