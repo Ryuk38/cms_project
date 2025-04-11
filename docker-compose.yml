@@ -8,12 +8,15 @@ services:
       - "8000:80"
     volumes:
       - .:/var/www/html
-    depends_on:
-      - mysql
     environment:
-      - MYSQL_HOST=mysql  # Will adjust to existing MySQL IP/port later
+      - MYSQL_HOST=host.docker.internal 
+      - MYSQL_PORT=3307
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DATABASE=cms_db
     networks:
       - cms-network
+
 networks:
   cms-network:
     driver: bridge
