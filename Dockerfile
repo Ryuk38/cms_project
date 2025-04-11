@@ -21,5 +21,8 @@ RUN echo "<Directory /var/www/html>\n\
 # Enable mod_rewrite (if needed for .htaccess)
 RUN a2enmod rewrite
 
+# Set ServerName to suppress warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 EXPOSE 80
 CMD ["apache2-foreground"]
