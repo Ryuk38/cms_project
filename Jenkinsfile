@@ -4,8 +4,9 @@ pipeline {
         stage("Checkout Code") {
             steps {
                 git branch: 'main', url: 'https://github.com/Ryuk38/cms_project.git'
+            }
         }
-        stage("Build and Deploy PHP") {
+        stage("Build and Deploy with Docker Compose") {
             steps {
                 sh 'docker-compose down || true'
                 sh 'docker-compose up -d --build'
