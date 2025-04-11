@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8010:80"
-    volumes:
-      - .:/var/www/html
+    # volumes:
+    #   - .:/var/www/html
     environment:
       - MYSQL_HOST=172.21.0.2
       - MYSQL_PORT=3306
