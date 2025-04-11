@@ -6,17 +6,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8010:80"
-    # volumes:
-    #   - .:/var/www/html
+    volumes:
+      - .:/var/www/html
     environment:
-      - MYSQL_HOST=172.21.0.2
-      - MYSQL_PORT=3306
+      - MYSQL_HOST=172.21.0.2  # Update to the new IP from inspect
+      - MYSQL_PORT=3307       # Match the host port mapping
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
-      - MYSQL_DATABASE=cms
+      - MYSQL_PASSWORD=rootpassword
+      - MYSQL_DATABASE=cms_db
     networks:
       - cms-network
-
 networks:
   cms-network:
     driver: bridge
