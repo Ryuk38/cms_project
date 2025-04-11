@@ -8,14 +8,14 @@ pipeline {
         }
         stage("Build and Deploy with Docker Compose") {
             steps {
-                sh 'docker-compose down || true'
-                sh 'docker-compose up -d --build'
+                sh 'docker-compose -f docker-compose.yml down || true'
+                sh 'docker-compose -f docker-compose.yml up -d --build'
             }
         }
     }
     post {
         always {
-            sh 'docker-compose logs'
+            sh 'docker-compose -f docker-compose.yml logs'
         }
     }
 }
