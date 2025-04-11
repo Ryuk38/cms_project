@@ -1,21 +1,29 @@
 pipeline {
     agent any
+
     stages {
-        stage("Checkout Code") {
+        stage('Clone CMS Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/Ryuk38/cms_project.git'
+                git 'https://github.com/Ryuk38/cms_project.git'
             }
         }
-        stage("Build and Deploy with Docker Compose") {
+
+        stage('Build Docker Images') {
             steps {
-                sh 'docker-compose -f docker-compose.yml down || true'
-                sh 'docker-compose -f docker-compose.yml up -d --build'
+                sh 'docker-compose build'
             }
         }
-    }
-    post {
-        always {
-            sh 'docker-compose -f docker-compose.yml logs'
+
+        stage('Run CMS in Containers') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Check Running Containers') {
+            steps {
+                sh 'docker ps'
+            }
         }
     }
 }

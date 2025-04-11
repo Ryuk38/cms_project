@@ -1,21 +1,27 @@
+
 version: '3.8'
+
 services:
-  php:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  web:
+    image: php:8.2-apache
+    container_name: cms_web
     ports:
       - "8010:80"
     volumes:
-      - .:/var/www/html
+      - ./src:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: test_db_1
     environment:
-      - MYSQL_HOST=mysql  # Use service name after network connection
-      - MYSQL_PORT=3306   # Internal MySQL port
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=rootpassword
-      - MYSQL_DATABASE=cms_db
-    networks:
-      - cms-network
-networks:
-  cms-network:
-    driver: bridge
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cms
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
