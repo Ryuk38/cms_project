@@ -9,10 +9,11 @@ COPY . .
 # Enable mysqli
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# Fix 403 Forbidden by allowing access to the directory
+# Fix 403 Forbidden and set index.php as default
 RUN echo "<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
+    DirectoryIndex index.php index.html\n\
     Require all granted\n\
 </Directory>" > /etc/apache2/conf-available/custom.conf && \
     a2enconf custom
