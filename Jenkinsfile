@@ -14,10 +14,14 @@ pipeline {
             }
         }
         stage('Run CMS in Containers') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }
+    steps {
+        sh '''
+            docker-compose down --volumes --remove-orphans
+            docker-compose up -d
+        '''
+    }
+}
+
         stage('Check Running Containers') {
             steps {
                 sh 'docker ps'
