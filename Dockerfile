@@ -15,4 +15,4 @@ RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["apache2-foreground"]
 
-EXPOSE 80 
+EXPOSE 80
