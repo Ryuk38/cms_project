@@ -4,7 +4,7 @@ pipeline {
         stage('Clone CMS Repo') {
             steps {
                 retry(3) {
-                    git url: 'https://github.com/Ryuk38/cms_project.git', branch: 'main' // Replace 'main' with the correct branch
+                    git url: 'https://github.com/Ryuk38/cms_project.git', branch: 'main' 
                 }
             }
         }

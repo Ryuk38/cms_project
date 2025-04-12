@@ -1,7 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-  echo '<script>alert(" Please Login to Continue"); window.location.href="login.php";</script>';
+  echo '<script>alert("Please Login to Continue"); window.location.href="login.php";</script>';
+  exit();
 }
 ?>
 
@@ -50,15 +51,16 @@ if (!isset($_SESSION['id'])) {
       margin-top: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .course h3 {
       font-size: 24px;
       margin-bottom: 10px;
-      flex-grow: 1;
+    }
+
+    .course p {
+      font-size: 16px;
+      margin-bottom: 10px;
     }
 
     .course a {
@@ -81,6 +83,7 @@ if (!isset($_SESSION['id'])) {
       font-size: 18px;
       color: #ff4500;
       text-decoration: none;
+      margin-top: 20px;
     }
 
     .back-link:hover {
@@ -91,39 +94,45 @@ if (!isset($_SESSION['id'])) {
 
 <body>
   <div class="dashboard-container">
-    <h2>Explore Courses</h2>
+    <h2>Explore Your Courses</h2>
     <a class="back-link" href="dashboard.php">Back to Dashboard</a>
     <?php
-    $id = $_SESSION['id'];
+    $id = $_SESSION['id']; // teacher ID
     $servername = "127.0.0.1";
     $username = "root";
-   $password = "root";
-   $dbname = "cms";
-   $port = "3307";
+    $password = "root";
+    $dbname = "cms";
+    $port = 3307;
 
-   $conn = new mysqli($servername, $username, $password, $dbname, (int)$port);
+    $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
     if ($conn->connect_error) {
       die("Connection failed: " . $conn->connect_error);
-    } else {
-      $sql = "SELECT course_id, course_name FROM course";
-      $result = $conn->query($sql);
-      if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-          echo '<div class="course">';
-          echo '<h3>' . $row["course_name"] . '</h3>';
-          echo '<a href="course_details.php?course_id=' . urlencode($row[  "course_id"]) . '">View Details</a>';
-          echo '</div>';
-        }
-      }
-      else
-      {
+    }
+
+    $sql = "SELECT course_id, course_name, course_desc, syllabus FROM course WHERE tr_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
         echo '<div class="course">';
-        echo '<h3>No Courses Available</h3>';
+        echo '<h3>' . htmlspecialchars($row["course_name"]) . '</h3>';
+        echo '<p><strong>Description:</strong> ' . nl2br(htmlspecialchars($row["course_desc"])) . '</p>';
+        echo '<p><strong>Syllabus:</strong> ' . nl2br(htmlspecialchars($row["syllabus"])) . '</p>';
+        echo '<a href="course_details.php?course_id=' . urlencode($row["course_id"]) . '">View Details</a>';
         echo '</div>';
       }
-      $conn->close();
+    } else {
+      echo '<div class="course">';
+      echo '<h3>No Courses Assigned</h3>';
+      echo '</div>';
     }
+
+    $stmt->close();
+    $conn->close();
     ?>
   </div>
 </body>
